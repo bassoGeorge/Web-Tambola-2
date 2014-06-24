@@ -1,0 +1,89 @@
+// The full server-client API
+
+/*------ Start Message ----------*/
+{
+  kind: "GameStartInfo",
+  data: {
+    details: {
+      Line1: {
+        prize: 500,   // Number
+        count: 3      // Number
+      },
+      Line2: {...},
+      Line3: {...},
+      BullsEye: {...},
+      Corners: {...},
+      Star: {...},
+      FullHouse: {...}
+    },
+    ticketPrice: 150, // Number
+    timeLeft: 90      // Seconds
+  }
+}
+/*----------- Game Control ------------*/
+{ kind: "GameStart" }
+
+{
+  kind: "GameEnd",
+  data: 325   // Perks left
+}
+
+{
+  kind: "ErrorMessage",
+  data: <Message> // String
+}
+
+// TicketRequest
+{ kind: "TicketRequest" }
+
+// TicketIssue
+/** Changed the ticket type by replacing nulls with {}, AngularJs seems to have
+ * issues with null :/ */
+{
+  kind: "TicketIssue",
+  data: [   //Ticket
+    [{number: 9}, {number: 19}, {}, {}, {number: 49}, {number: 59}, {number: 69}, {}, {}],
+    [{number: 9}, {number: 19}, {}, {}, {number: 49}, {number: 59}, {number: 69}, {}, {}],
+    [{number: 9}, {number: 19}, {}, {}, {number: 49}, {number: 59}, {number: 69}, {}, {}]
+  ]
+}
+
+// Claim
+{
+  kind: "Claim",
+  data: {
+    claimType: "Line1 | Line2 | Line3 | BullsEye | Corners | FullHouse",
+    ticketId: 0,   // Number
+    ticket: <Ticket>
+  }
+}
+
+/*--------- Number picks -----------*/
+{
+  kind: "TimeLeftForNewNumber",
+  data: 15    // Seconds
+}
+
+{
+  kind: "NewNumberPick",
+  data: 50    // The picked number
+}
+
+/*-------- Claim Replies -----------*/
+{
+  kind: "ClaimSuccess | ClaimFailure",
+  data: {
+    ticketId: 0,
+    ticket: <Ticket>
+  }
+}
+
+/*-------- Leaderboard --------------*/
+{
+  kind: "Leaderboard",
+  data: [{
+    claimType: <ClaimType>,
+    username: "username",
+    prize: "prize"
+  }, ...]
+}

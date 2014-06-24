@@ -1,0 +1,194 @@
+@(af: Form[models.GameManager.GameManager.GameConfiguration])
+
+@import helper._
+
+@main("Web-Tambola Administration") {
+  <form class="form-horizontal" role="form" method="POST" action="@routes.Admin.adminSubmit()">
+    <div class="row">
+      <div class="col-xs-9 col-md-6">
+        <!-- NumberPick, ticket and timeconfig -->
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h2 class="panel-title">Time Configuration</h2>
+          </div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-sm-6 control-label">Game to start in (min)</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="timeConfig.gameToStartIn" value='@af("timeConfig.gameToStartIn").value.get'>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-6 control-label">Number of consecutive games</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="timeConfig.numberOfGames" value='@af("timeConfig.numberOfGames").value.get'>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">Number Pick Timing</h2>
+          </div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-sm-6 control-label">Average pick time (seconds)</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="numberPickTiming.averageTime" value='@af("numberPickTiming.averageTime").value.get'>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-6 control-label">Maximum random offset (seconds)</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="numberPickTiming.maxOffset" value='@af("numberPickTiming.maxOffset").value.get'>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h2 class="panel-title">Ticket Configuration</h2>
+          </div>
+          <div class="panel-body">
+            <div class="form-group">
+              <label class="col-sm-6 control-label">Total number of available tickets</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="ticketConfig.ticketsAvailable" value='@af("ticketConfig.ticketsAvailable").value.get'>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-6 control-label">Ticket Price</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="ticketConfig.pricePerTicket" value='@af("ticketConfig.pricePerTicket").value.get'>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="col-sm-6 control-label">Initial perks per player</label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" name="ticketConfig.initialPerks" value='@af("ticketConfig.initialPerks").value.get'>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-xs-9 col-md-6">
+        <div class="panel panel-warning">
+          <div class="panel-heading">
+            <div class="row">
+              <div class="col-sm-6">
+                <h2 class="panel-title">Prize</h2>
+              </div>
+              <div class="col-sm-3">
+                <h2 class="panel-title">Winnings(perks)</h2>
+              </div>
+              <div class="col-sm-3">
+                <h2 class="panel-title">qty</h2>
+              </div>
+            </div>
+          </div>
+          <div class="panel-body">
+
+            <div class="form-group">
+              <label class="col-sm-6 control-label">Line (each)</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="prizeMoney.line" value='@af("prizeMoney.line").value.get'>
+              </div>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="totalNumbers.line" value='@af("totalNumbers.line").value.get'>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-6 control-label">BullsEye</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="prizeMoney.BullsEye" value='@af("prizeMoney.BullsEye").value.get'>
+              </div>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="totalNumbers.BullsEye" value='@af("totalNumbers.BullsEye").value.get'>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-6 control-label">Corners</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="prizeMoney.Corners" value='@af("prizeMoney.Corners").value.get'>
+              </div>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="totalNumbers.Corners" value='@af("totalNumbers.Corners").value.get'>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-6 control-label">Star</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="prizeMoney.Star" value='@af("prizeMoney.Star").value.get'>
+              </div>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="totalNumbers.Star" value='@af("totalNumbers.Star").value.get'>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-6 control-label">FullHouse</label>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="prizeMoney.FullHouse" value='@af("prizeMoney.FullHouse").value.get'>
+              </div>
+              <div class="col-sm-3">
+                <input type="text" class="form-control" name="totalNumbers.FullHouse" value='@af("totalNumbers.FullHouse").value.get'>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-4">
+            <input type="submit" class="form-control btn-primary">
+          </div>
+          <div class="col-sm-offset-1 col-sm-4">
+            <input type="reset" class="form-control btn-warning">
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+  <!-- Helpers not that great
+  @form(action = routes.Admin.adminSubmit()) {
+    <div class="row">
+      <div class="col-xs-6 col-md-4">
+        @inputText(
+          af("numberPickTiming.averageTime"),
+          '_help -> "Wait time before a number pick",
+          '_label -> "Custom",
+          '_error -> af.globalError
+        )
+        @inputText(af("numberPickTiming.maxOffset"))
+        <hr/>
+        @inputText(af("ticketConfig.ticketsAvailable"))
+        @inputText(af("ticketConfig.pricePerTicket"))
+        @inputText(af("ticketConfig.initialPerks"))
+        <hr/>
+        @inputText(af("timeConfig.gameToStartIn"))
+        @inputText(af("timeConfig.numberOfGames"))
+
+      </div>
+      <div class="col-xs-6 col-md-4">
+        @inputText(af("totalNumbers.line"))
+        @inputText(af("totalNumbers.BullsEye"))
+        @inputText(af("totalNumbers.Corners"))
+        @inputText(af("totalNumbers.Star"))
+        @inputText(af("totalNumbers.FullHouse"))
+      </div>
+      <div class="col-xs-6 col-md-4">
+        @inputText(af("prizeMoney.line"))
+        @inputText(af("prizeMoney.BullsEye"))
+        @inputText(af("prizeMoney.Corners"))
+        @inputText(af("prizeMoney.Star"))
+        @inputText(af("prizeMoney.FullHouse"))
+      </div>
+    </div>
+    <input type="submit">
+  }-->
+}

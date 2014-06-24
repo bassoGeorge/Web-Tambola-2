@@ -1,0 +1,17 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+GET     /                           controllers.Application.index()
+GET     /test                       controllers.Application.test()
+GET     /join                       controllers.Application.joinGame(user: Option[String])
+GET     /join/play                  controllers.Application.confirmJoin()
+GET     /checkstatus                controllers.Application.checkStatus()
+
+GET     /admin                      controllers.Admin.admin()
+POST    /admin/submit               controllers.Admin.adminSubmit()
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/javascripts/connect.js controllers.Application.connectJs()
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+GET     /webjars/*file              controllers.WebJarAssets.at(file)
