@@ -70,6 +70,9 @@ controllers.testCtrl = function($scope) {
     error: "You got it wrong man",
     info: "Hey, look at this"
   }
+
+  $scope.timer = null                                     // 6
+  $scope.number = null
 }
 controllers.testCtrl.$inject = ['$scope']
 
@@ -87,6 +90,7 @@ controllers.mainCtrl = function($scope) {
     info: "",
     error: ""
   }
+  $scope.timer = null                                         // 6
 
   var receive = function(msg) {
     switch(msg.kind) {
@@ -94,19 +98,28 @@ controllers.mainCtrl = function($scope) {
         ticketPacks.push(createPack(msg.data))
         break;
       case "GameStartInfo": break;
-      case "GameStart": break;
+      case "GameStart":
+        // apart from other things
+        $scope.messages.info = "Game On !!"
+        break;
       case "GameEnd": break;
-      case "ErrorMessage": break;
-      case "TimeLeftForNewNumber": break;
+      case "ErrorMessage":
+        $scope.messages.error = msg.data
+        break;
+      case "TimeLeftForNewNumber":
+        $scope.timer = { time: msg.data, message: "left for new number to be announced"}
+        break;
       case "NewNumberPick": break;
       case "ClaimSuccess": break;
       case "ClaimFailure": break;
       case "PrizeDepleted":
         for (pack in $scope.ticketPacks)
           pack.cButtons[msg.data] = false
+        $scope.messages.info = "The "+msg.data+" prize has been depleted"
         break;
       case "Leaderboard":
         $scope.leaderboard = msg.data
+        $scope.messages.info = "The leaderboard has changed, check it out"
         break;
     }
   }

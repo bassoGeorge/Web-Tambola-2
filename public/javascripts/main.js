@@ -23,6 +23,8 @@ require(['angular', './controllers', './directives', 'jquery'],
     .controller('testCtrl', controllers.testCtrl)
     .directive('claimButton', directives.claimButton)
     .directive('alertPop', ['$timeout', directives.alertPop])
+    .directive('gameTimer', directives.gameTimer)
+    .directive('numberPop', ['$timeout', directives.numberPop])
     angular.bootstrap(document, ['tambolaApp']);
 
 });

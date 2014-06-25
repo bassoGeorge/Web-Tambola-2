@@ -21,3 +21,15 @@
   width: 11.1%;
   text-align: center;
 }
+.stopwatch {
+  padding-bottom: 10px;
+  width:65%;
+  margin:auto;
+}
+.stopwatch .message{
+  text-align: center;
+}
+.numberPop {
+  text-align: center;
+  font-size: 2000%;
+}

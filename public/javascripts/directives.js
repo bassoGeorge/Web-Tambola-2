@@ -47,5 +47,52 @@ define([], function() {
       }
     }
   }
+
+  directives.gameTimer = function() {
+    return {
+      restrict: 'AE',
+      replace: true,
+      scope: {
+        timer: '='
+      },
+      template: '<div class="stopwatch"><div></div><div class="message">{{timer.message}}</div></div>',
+      link: function(scope, elem, attr) {
+        var clock = new FlipClock(elem.children("div")[0], {
+          countdown: true,
+          autoStart: false,
+          clockFace: "MinuteCounter",
+          callbacks: {
+            stop: function(){scope.$apply(function(){scope.timer = null})}
+          }
+        })
+
+        scope.$watch(function(){return scope.timer}, function(value){
+          if(value != null) {
+            elem.show()
+            clock.setTime(value.time)
+            clock.start()
+          } else elem.hide()
+        })
+      }
+    }
+  }
+
+  directives.numberPop = function($timeout) {
+    return {
+      restrict: 'AE',
+      replace: true,
+      scope: {number: '='},
+      template: '<div class="numberPop">{{ number }}</div>',
+      link: function(scope, elem, attr) {
+        scope.$watch(function(){return scope.number}, function(value){
+          if(value != null) {
+            elem.show()
+            $timeout(function(){scope.number = null}, parseInt(attr.delay))
+          } else elem.hide()
+        })
+      }
+    }
+  }
+
   return directives
 });

@@ -8,11 +8,13 @@
   <div class="col-xs-9 col-md-6">
     @playArea()
   </div>
-  <div class="col-xs-3 col-md-2">
-    @leaderboard()
-    @details()
-  </div>
   <div class="col-xs-6 col-md-4">
+    <!--<div id="stopwatch"></div>-->
+    <game-timer timer="timer"></game-timer>
+    <button class="btn btn-default" ng-click="timer = {time: 100, message: 'hellooo'}; number = 5">Set time</button>
+    <number-pop number="number" delay="4000"></number-pop>
+  </div>
+  <div class="col-xs-3 col-md-2">
     @alerts()
     <div class="row">
       <div class="col-sm-4">
@@ -27,6 +29,15 @@
     </div>
   </div>
 </div>
+<script>/*
+  $("#stopwatch").FlipClock(40, {
+    countdown: true,
+    clockFace: "MinuteCounter",
+    callbacks: {
+      stop: function(){alert("Stopwatch finished")}
+    }
+  })*/
+</script>
   <!--
 <div class="row">
   <div class="col-xs-9 col-md-6">
