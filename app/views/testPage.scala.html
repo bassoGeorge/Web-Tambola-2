@@ -4,13 +4,27 @@
 @main("Testing page") {
 <!-- <script src='@routes.Assets.at("javascripts/ticket.js")'></script> -->
 <script src='@routes.Application.connectJs()'></script>
-<div class="row" ng-controller="mainCtrl">
+<div class="row" ng-controller="testCtrl">
   <div class="col-xs-9 col-md-6">
     @playArea()
   </div>
   <div class="col-xs-3 col-md-2">
     @leaderboard()
     @details()
+  </div>
+  <div class="col-xs-6 col-md-4">
+    @alerts()
+    <div class="row">
+      <div class="col-sm-4">
+        <button class='btn btn-warning' style='width:80%' ng-click="messages.error = 'Re-doing the error message'">alert</button>
+      </div>
+      <div class="col-sm-4">
+        <button class='btn btn-success' style='width:80%' ng-click="messages.success = 'Re-doing the success message'">alert</button>
+      </div>
+      <div class="col-sm-4">
+        <button class='btn btn-info' style='width:80%' ng-click="messages.info = 'Re-doing the info message'">alert</button>
+      </div>
+    </div>
   </div>
 </div>
   <!--

@@ -5,41 +5,43 @@
 define(function() {
 
 
+/* ---------------- Auxiliary functions ------------- */
 var createPack = function(newTicket) {
-  var btnPack = function() {
-    var res = {}
-    for (c in ["Line1", "Line2", "Line3", "Corners", "BullsEye", "FullHouse"])
-      res[c] = true
-    return res
+  var btnPack2 = function() {
+    return {
+      Line1: true,
+      Line2: true,
+      Line3: true,
+      Corners: true,
+      BullsEye: true,
+      FullHouse: true
+    }
   }
   return {
     ticket: newTicket,
-    cButtons: btnPack()
+    cButtons: btnPack2()
+  }
+}
+
+function Claim(id, claimType, ticket) {
+  this.kind = "Claim"
+  this.data = {
+    claimType: claimType,
+    ticketId: id,
+    ticket: ticket
   }
 }
 
 /* Controllers */
 var controllers = {};
-controllers.mainCtrl = function($scope) {
-  /* ---- my code to go here ---- */
+controllers.testCtrl = function($scope) {
 
-  /* ---------------- Samples ------------------------------------- */
-  $scope.SampleTicketPacks = [
-    {
-      ticket: [[{number:10}, {number:30}, {number:20}, {}, {number:50}, {}, {}, {}, {number:90}],
+  var sTicket = [[{number:10}, {number:30}, {number:20}, {}, {number:50}, {}, {}, {}, {number:90}],
             [{number:10}, {}, {number:20}, {}, {},{number:10}, {number:35}, {number:30}, {}],
-            [{}, {number:35}, {}, {}, {number:32}, {number:60}, {}, {number:53}, {number:86}]],
-      cButtons: {Line1: true, Line2: true, Line3: true, Corners: true, BullsEye: true, FullHouse: true}
-    },
-    {
-      ticket: [[{number:10}, {number:30}, {number:20}, {}, {number:50}, {}, {}, {}, {number:90}],
-            [{number:10}, {}, {number:20}, {}, {},{number:10}, {number:35}, {number:30}, {}],
-            [{}, {number:35}, {}, {}, {number:32}, {number:60}, {}, {number:53}, {number:86}]],
-      cButtons: {Line1: true, Line2: true, Line3: true, Corners: true, BullsEye: true, FullHouse: true}
-    }
-  ]
+            [{}, {number:35}, {}, {}, {number:32}, {number:60}, {}, {number:53}, {number:86}]]
 
-  $scope.sampleLeaderboard = [
+  $scope.ticketPacks = [createPack(sTicket), createPack(sTicket)]   // 1
+  $scope.leaderboard = [                                            // 2
     {
       prize: "Full house",
       username: "Anish George",
@@ -52,7 +54,7 @@ controllers.mainCtrl = function($scope) {
     }
   ]
 
-  $scope.sampleGameDetails = {
+  $scope.gameDetails = {                                             // 3
     "Line 1": { prize: 100, count: 3 },
     "Line 2": { prize: 100, count: 3 },
     "Line 3": { prize: 100, count: 3 },
@@ -61,18 +63,30 @@ controllers.mainCtrl = function($scope) {
     "Full house": { prize: 500, count: 1}
   }
 
+  $scope.submitFn = function(id, claimType, ticket) {alert(JSON.stringify(new Claim(id, claimType, ticket)))}   // 4
+
+  $scope.messages = {                                   // 5
+    success: "You have it right !!",
+    error: "You got it wrong man",
+    info: "Hey, look at this"
+  }
+}
+controllers.testCtrl.$inject = ['$scope']
+
+
+controllers.mainCtrl = function($scope) {
+  /* ---- my code to go here ---- */
   /* -------------- Actuals --------------- */
   $scope.con = {}     // Connection item
-  $scope.ticketPacks = []   // Array of ticketPacks
-  $scope.leaderboard = []   // Leaderboard array
-  $scope.submitFn = function(id, claimType, ticket) { alert(JSON.stringify({    // TODO: replace by con.send()
-    kind: "Claim",
-    data: {
-      claimType: claimType,
-      ticketId: id,
-      ticket: ticket
-    }
-  }))}
+  $scope.ticketPacks = []   // Array of ticketPacks         // 1
+  $scope.leaderboard = []   // Leaderboard array            // 2
+  $scope.gameDetails = {}                                   // 3
+  $scope.submitFn = function(id, claimType, ticket) {con.send(new Claim(id, claimType, ticket))}    // 4
+  $scope.message = {                                        // 5
+    success: "",
+    info: "",
+    error: ""
+  }
 
   var receive = function(msg) {
     switch(msg.kind) {

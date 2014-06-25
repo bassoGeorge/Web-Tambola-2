@@ -1,5 +1,5 @@
 @()
-<div ng-if="sampleLeaderboard">
+<div ng-if="leaderboard">
   <h3>Leaderboard</h3>
   <table class="table leaderboard">
     <thead>
@@ -11,7 +11,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr ng-repeat="entry in sampleLeaderboard">
+      <tr ng-repeat="entry in leaderboard">
         <td>{{ $index + 1}}</td>
         <td>{{ entry.prize }}</td>
         <td>{{ entry.username }}</td>
@@ -19,4 +19,4 @@
       </tr>
     </tbody>
   </table>
-<div>
+</div>

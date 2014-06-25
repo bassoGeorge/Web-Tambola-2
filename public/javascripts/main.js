@@ -20,7 +20,9 @@ require(['angular', './controllers', './directives', 'jquery'],
 
     angular.module('tambolaApp', [])
     .controller('mainCtrl', controllers.mainCtrl)    // TODO: I think i need to add on the controllers here
+    .controller('testCtrl', controllers.testCtrl)
     .directive('claimButton', directives.claimButton)
+    .directive('alertPop', ['$timeout', directives.alertPop])
     angular.bootstrap(document, ['tambolaApp']);
 
 });
