@@ -1,0 +1,24 @@
+@()
+<div class="panel panel-info" ng-if="sampleGameDetails">
+  <div class="panel-heading">
+    <h2 class="panel-title">Game details</h2>
+  </div>
+  <div class="panel-body">
+    <table class="table table-condensed table-striped">
+      <thead>
+        <tr>
+          <th>Prize</th>
+          <th>Perks</th>
+          <th>Qty</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(key, value) in sampleGameDetails">
+          <td>{{ key }}</td>
+          <td>{{ value.prize }}</td>
+          <td>{{ value.count }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

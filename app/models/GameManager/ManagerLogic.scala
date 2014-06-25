@@ -33,7 +33,7 @@ private[GameManager] object ManagerLogic {
     // create the 'details' part of the initial client message
   def makeDetailsMessage(pm: PrizeMap): JsValue = JsObject(
     pm.toSeq.map{ case (c, pc) =>
-      (c.toString, Json.obj("prize" -> pc.perks, "count" -> pc.num))}
+      (models.claimNormalise(c), Json.obj("prize" -> pc.perks, "count" -> pc.num))}
   )
 
     // master method, create all configs and send them into the wild ~

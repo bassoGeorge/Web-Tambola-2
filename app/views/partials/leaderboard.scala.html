@@ -1,19 +1,22 @@
 @()
-<table class="table table-striped leaderboard">
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>Prize</th>
-      <th>Winner</th>
-      <th>Amt.</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr ng-repeat="entry in sampleLeaderboard">
-      <td>{{ $index + 1}}</td>
-      <td>{{ entry.prize }}</td>
-      <td>{{ entry.username }}</td>
-      <td>{{ entry.winning }}</td>
-    </tr>
-  </tbody>
-</table>
+<div ng-if="sampleLeaderboard">
+  <h3>Leaderboard</h3>
+  <table class="table leaderboard">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Prize</th>
+        <th>Winner</th>
+        <th>Amt.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="entry in sampleLeaderboard">
+        <td>{{ $index + 1}}</td>
+        <td>{{ entry.prize }}</td>
+        <td>{{ entry.username }}</td>
+        <td>{{ entry.winning }}</td>
+      </tr>
+    </tbody>
+  </table>
+<div>

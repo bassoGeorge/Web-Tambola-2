@@ -15,6 +15,7 @@
 }
 .ticket {
   table-layout: fixed;
+  font-size: 1.2em;
 }
 .ticket td {
   width: 11.1%;

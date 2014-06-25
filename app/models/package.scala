@@ -30,6 +30,16 @@ package object models {
         FullHouse = Value
   }
   type ClaimType = ClaimType.ClaimType
+  
+  import ClaimType._
+  lazy val claimNormalise: Map[ClaimType, String] = Map(
+    Line1 -> "Line 1",
+    Line2 -> "Line 2",
+    Line3 -> "Line 3",
+    Corners -> "Corners",
+    BullsEye -> "Bull's eye",
+    FullHouse -> "Full house"
+  )
 
   import play.api.libs.json._
   import Json._

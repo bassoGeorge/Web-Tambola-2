@@ -52,6 +52,15 @@ controllers.mainCtrl = function($scope) {
     }
   ]
 
+  $scope.sampleGameDetails = {
+    "Line 1": { prize: 100, count: 3 },
+    "Line 2": { prize: 100, count: 3 },
+    "Line 3": { prize: 100, count: 3 },
+    "Corners": { prize: 300, count: 2},
+    "Bull's Eye": { prize: 300, count: 2},
+    "Full house": { prize: 500, count: 1}
+  }
+
   /* -------------- Actuals --------------- */
   $scope.con = {}     // Connection item
   $scope.ticketPacks = []   // Array of ticketPacks
