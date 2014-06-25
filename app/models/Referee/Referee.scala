@@ -11,6 +11,7 @@ import models._
 import play.api.libs.json._
 import models.Leaderboard.{Leaderboard, LbEntry}
 import models.ClientManager.Client
+import models.ClientManager.ClientManager
 
 /**
  * Created by Anish'basso' on 6/4/14.
@@ -77,7 +78,8 @@ class Referee(val mediator: ActorRef, val tracker: ActorRef)
   }
 
   when (Active) {
-    case Event(ClerkDone(_), rd @ RefereeData(_, activeClerks)) =>
+    case Event(ClerkDone(claimType), rd @ RefereeData(_, activeClerks)) =>
+      mediator ! ClientManager.Broadcast(Json.obj("kind" -> "PrizeDepleted", "data" -> claimType.toString))
       if (activeClerks == 1) {
         mediator ! GameEnd
         goto(Inactive)

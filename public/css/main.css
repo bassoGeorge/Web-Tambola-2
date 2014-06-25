@@ -1,0 +1,22 @@
+.claimButtons button {
+  width:100%;
+}
+.claimButtons .row {
+  margin-left: 1px;
+  margin-right: 1px;
+  margin-bottom: 1px;
+  margin-top: 1px;
+}
+
+.claimButtons .row [class*='col-']:not(:first-child),
+.claimButtons .row [class*='col-']:not(:last-child) {
+  padding-right: 1px;
+  padding-left: 1px;
+}
+.ticket {
+  table-layout: fixed;
+}
+.ticket td {
+  width: 11.1%;
+  text-align: center;
+}

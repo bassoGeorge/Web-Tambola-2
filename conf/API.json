@@ -87,3 +87,9 @@
     prize: "prize"
   }, ...]
 }
+
+// Prize Depletion
+{
+  kind: "PrizeDepleted",
+  data: "Line1 | Line2 | Line3 | Corners | BullsEye | FullHouse"
+}

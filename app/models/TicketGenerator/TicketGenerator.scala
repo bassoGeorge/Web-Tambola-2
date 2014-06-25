@@ -52,6 +52,6 @@ class TicketGenerator(val mediator: ActorRef) extends Actor with FSM[BiState, Da
   whenUnhandled {
     case Event(Setup(count), _) =>
       if (count <= 0) throw new RuntimeException("TicketGenerator received invalid count")
-      stay using Balance(count)
+      goto(Active) using Balance(count)
   }
 }

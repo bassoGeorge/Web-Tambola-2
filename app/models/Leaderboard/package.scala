@@ -8,11 +8,20 @@ import Json._
 
 package object Leaderboard {
 
+  import ClaimType._
+  lazy val cPmap: Map[ClaimType, String] = Map(
+    Line1 -> "Line 1",
+    Line2 -> "Line 2",
+    Line3 -> "Line 3",
+    Corners -> "Corners",
+    BullsEye -> "Bull's eye",
+    FullHouse -> "Full house"
+  )
   implicit object LbEntryWrites extends Writes[LbEntry] {
     def writes(that: LbEntry): JsValue = Json.obj(
-      "claimType" -> that.claimType.toString,
+      "prize" -> cPmap(that.claimType),
       "username" -> that.user,
-      "prize" -> that.winning
+      "winning" -> that.winning
     )
   }
 }

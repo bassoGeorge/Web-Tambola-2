@@ -1,33 +1,18 @@
 @()
 
+@import partials._
 @main("Testing page") {
-<style>
-  .claimButtons button {
-    width:100%;
-  }
-  .claimButtons .row {
-    margin-left: 1px;
-    margin-right: 1px;
-    margin-bottom: 1px;
-    margin-top: 1px;
-  }
-
-  .claimButtons .row [class*='col-']:not(:first-child),
-  .claimButtons .row [class*='col-']:not(:last-child) {
-    padding-right: 1px;
-    padding-left: 1px;
-  }
-  .ticket {
-    table-layout: fixed;
-  }
-  .ticket td {
-    width: 11.1%;
-    text-align: center;
-  }
-</style>
 <!-- <script src='@routes.Assets.at("javascripts/ticket.js")'></script> -->
-<!-- <script src='@routes.Application.connectJs()'></script> -->
-<!--
+<script src='@routes.Application.connectJs()'></script>
+<div class="row" ng-controller="mainCtrl">
+  <div class="col-xs-9 col-md-6">
+    @playArea()
+  </div>
+  <div class="col-xs-3 col-md-2">
+    @leaderboard()
+  </div>
+</div>
+  <!--
 <div class="row">
   <div class="col-xs-9 col-md-6">
     <span>{{ name }} </span>
@@ -40,12 +25,13 @@
     </table>
   </div>
 </div> -->
+  <!--
 <div class="row" ng-controller="mainCtrl">
   <div class="col-md-4">
     <span> My name is {{ myName }} </span>
   </div>
   <div class="col-md-8">
-    <div class="row" ng-repeat="ticketPack in ticketPacks">
+    <div class="row" ng-repeat="ticketPack in SampleTicketPacks">
       <div class="col-sm-8">
         <table class="table table-bordered ticket">
             <tr ng-repeat="r in ticketPack.ticket">
