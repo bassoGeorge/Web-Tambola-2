@@ -85,8 +85,8 @@ class Referee(val mediator: ActorRef, val tracker: ActorRef)
         goto(Inactive)
       } else stay using rd.copy(activeClerks = activeClerks - 1)
 
-    case Event(ClaimSuccess(user, claimType), RefereeData(prizeConfigMap, _))=>
-      mediator ! Leaderboard.Post(LbEntry(claimType, user, prizeConfigMap(claimType).perks))
+    case Event(ClaimSuccess(user, claimType, perks), RefereeData(_, _))=>
+      mediator ! Leaderboard.Post(LbEntry(claimType, user, perks))
       stay
 
     case Event(GameEnd, _) => goto(Inactive)
@@ -100,9 +100,9 @@ class Referee(val mediator: ActorRef, val tracker: ActorRef)
 
   onTransition {
     case Inactive -> Active =>
-      stateData match {
+      nextStateData match {
         case RefereeData(prizeConfigMap, _) =>
-          clerkMap.foreach{case (ct, a) => a ! Clerk.Setup(prizeConfigMap(ct).num)}
+          clerkMap.foreach{case (ct, a) => a ! Clerk.Setup(prizeConfigMap(ct).perks, prizeConfigMap(ct).num)}
         case _ => throw new RuntimeException("Invalid data for Referee on transition to Active")
       }
   }

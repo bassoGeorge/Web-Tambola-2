@@ -14,6 +14,6 @@ package object Referee {
 
 
 
-  case class ClaimSuccess(user: String, claimType: ClaimType)
+  case class ClaimSuccess(user: String, claimType: ClaimType, perks: Int)
   case class ClerkDone(c: ClaimType)
 }

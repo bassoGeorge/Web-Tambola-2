@@ -18,10 +18,10 @@ import Referee.Claim
 
 object Clerk {
   trait Data
-  case class Prizes(n: Int) extends Data
+  case class Prizes(p: Int, n: Int) extends Data
   case object Uninitialized extends Data
 
-  case class Setup(count: Int)
+  case class Setup(perks: Int, count: Int)
 
 }
 import models.{BiState, Active, Inactive}
@@ -64,15 +64,16 @@ trait Clerk extends Actor with FSM[BiState, Data] {
 
   startWith(Inactive, Uninitialized)
   when (Active) {
-    case Event(Claim(clm), Prizes(count)) =>
+    case Event(Claim(clm), Prizes(perks, count)) =>
       if (checkClaim(ticketify(clm \ "ticket"))) {
         (sender ? Client.GetUsername).onComplete {
-          case Success(user) => parent ! ClaimSuccess(user.asInstanceOf[String], claimType)
-          case Failure(_) => parent ! ClaimSuccess("Unknown", claimType)
+          case Success(user) => parent ! ClaimSuccess(user.asInstanceOf[String], claimType, perks)
+          case Failure(_) => parent ! ClaimSuccess("Unknown", claimType, perks)
         }
         sender ! makeClientMessage(clm)(makeSMessage)
+        sender ! Client.UpdatePerks(perks)
         if (count == 1) goto(Inactive) using Uninitialized
-        else stay using Prizes(count - 1)
+        else stay using Prizes(perks, count - 1)
       } else stay replying makeClientMessage(clm)(makeFMessage)
   }
 
@@ -81,7 +82,7 @@ trait Clerk extends Actor with FSM[BiState, Data] {
   }
 
   whenUnhandled {
-    case Event(Setup(count), _) => goto (Active) using Prizes(count)
+    case Event(Setup(perks, count), _) => goto (Active) using Prizes(perks, count)
   }
 
   onTransition {

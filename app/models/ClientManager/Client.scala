@@ -36,7 +36,7 @@ object Client {
   case class ErrorMessage(msg: String) extends Message
 
   trait Directive
-  case object GetSocket extends Directive
+  case class UpdatePerks(n: Int) extends Directive
   case object GetUsername extends Directive
   case class TicketIssue(data: JsValue) extends Directive
   case object TicketIssueFailure extends Directive
@@ -133,6 +133,9 @@ class Client
     case Event(e: Claim, _) =>
       mediator ! e
       stay
+    case Event(UpdatePerks(count), CurrentData(p, tp)) =>
+      self ! ServerMessage(userData(p+count))
+      stay using CurrentData(p+count, tp)
   }
 
   onTransition{

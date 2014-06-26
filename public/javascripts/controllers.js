@@ -73,6 +73,12 @@ controllers.testCtrl = function($scope) {
 
   $scope.timer = null                                     // 6
   $scope.number = null
+  $scope.ticket = {                                       // 7
+    price: 100,
+    count: 100
+  }
+  $scope.ticketReq = function(){alert(JSON.stringify({kind: "TicketRequest"}))} // 8
+  $scope.perks = 0    // 9
 }
 controllers.testCtrl.$inject = ['$scope']
 
@@ -91,27 +97,52 @@ controllers.mainCtrl = function($scope) {
     error: ""
   }
   $scope.timer = null                                         // 6
+  $scope.ticket = {}                                        // 7
+  $scope.ticketReq = function(){/*con.send({kind: "TicketRequest"}))*/}   // 8
+  $scope.perks = 0    // 9
 
   var receive = function(msg) {
     switch(msg.kind) {
-      case "TicketIssue":
-        ticketPacks.push(createPack(msg.data))
+      case "UserData":
+        $scope.perks = msg.data
         break;
-      case "GameStartInfo": break;
+      case "TicketIssue":
+        $scope.ticketPacks.push(createPack(msg.data))
+        break;
+      case "TicketsLeft":
+        $scope.ticket.count = msg.data
+        break;
+      case "GameStartInfo":
+        $scope.gameDetails = msg.data.details
+        $scope.ticket.price = msg.data.ticketPrice
+        $scope.timer = {time: msg.data.timeLeft, message: "for game to start"}
+        break;
       case "GameStart":
         // apart from other things
+        $scope.ticket = {}
         $scope.messages.info = "Game On !!"
         break;
-      case "GameEnd": break;
+      case "GameEnd":
+        $scope.ticketPacks = []
+        $scope.gameDetails = {}
+        $scope.leaderboard = {}
+        $scope.message.info = "The game has finished"
+        break;
       case "ErrorMessage":
         $scope.messages.error = msg.data
         break;
       case "TimeLeftForNewNumber":
         $scope.timer = { time: msg.data, message: "left for new number to be announced"}
         break;
-      case "NewNumberPick": break;
-      case "ClaimSuccess": break;
-      case "ClaimFailure": break;
+      case "NewNumberPick":
+        $scope.number = msg.data
+        break;
+      case "ClaimSuccess":
+        $scope.messages.success = "Your claim was accepted"
+        break;
+      case "ClaimFailure":
+        $scope.ticketPacks[msg.data.ticketId].cButtons[msg.data.claimType] = true
+        break;
       case "PrizeDepleted":
         for (pack in $scope.ticketPacks)
           pack.cButtons[msg.data] = false
