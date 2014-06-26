@@ -13,6 +13,7 @@ object SessionManager {
   trait Directive
   case class NewRequest(user: String) extends Directive   // Returns an Either[String, Int]
   case class ConfirmRequest(token: Int) extends Directive
+  case class RemoveUser(user: String) extends Directive
 
   case class TimeoutToken(t: Int)
 }
@@ -47,5 +48,8 @@ class SessionManager(mediator: ActorRef) extends Actor {
           buff.remove(token)
           sender ! Right(user)
       }
+
+    case RemoveUser(user) =>
+      dbProxy.removeUsers(user)
   }
 }

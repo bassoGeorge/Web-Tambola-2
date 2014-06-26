@@ -29,9 +29,11 @@ function connect(username, fnConf, callBack) {
         if(fnConf.onMessage)
           socket.onmessage = function(event) {fnConf.onMessage(JSON.parse(event.data))}
         callBack({
-          send: function(obj){socket.send(JSON.stringify(obj))}
+          isConnected: true,
+          send: function(obj){socket.send(JSON.stringify(obj))},
+          close: function(){socket.close(); this.isConnected = false}
         })
-      } else callBack({error: "Couldn't get connectionStatus as true, socket handshake discontinued at last step"})
+      } else callBack({isConnected: false, error: "Couldn't get connectionStatus as true, socket handshake discontinued at last step"})
     }
     if(fnConf.onClose) {
       res += "found onClose(), "
@@ -48,12 +50,12 @@ function connect(username, fnConf, callBack) {
     $.getJSON("@routes.Application.joinGame(None)", {user: username},
       function(data, status, xhr) {
         if(data.token) confirmCon(data.token)
-        else callBack({ error: data })
+        else callBack({ isConnected: false, error: data })
       }
     )
   }
 }
 
 function getGameStatus(fn) {
-  $.getJSON("@routes.Application.checkStatus()", fn)
+  $.getJSON("@routes.Application.checkStatus()", function(d, s, x){fn(d)})
 }

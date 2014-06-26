@@ -28,7 +28,8 @@ object GameManager {
   ) extends Directive with GameData
 
   case object Uninitialized extends GameData
-  case object MoveOn
+  case object StartTheGame extends Directive
+  case object PreStart extends Directive
 }
 import models.GameManager.GameManager._
 import ManagerLogic._
@@ -57,7 +58,11 @@ class GameManager(val mediator: ActorRef) extends Actor with FSM[GameState, Game
       goto (Waiting) using gc
   }
   when (Waiting) {
-    case Event(MoveOn,_) => goto (Running)
+    case Event(StartTheGame,_) => goto (Running)
+    case Event(PreStart,gc @ GameConfiguration(_,_,_,_,TimeConfig(startIn, _))) =>
+      createConfigAndSend(mediator, gc)   // configuration is sent every time a game starts
+      actorSys.scheduler.scheduleOnce(startIn.minutes,self, StartTheGame)
+      stay
   }
   when (Running) {
       // Game has ended, lets get ready for the next game if its there
@@ -69,14 +74,18 @@ class GameManager(val mediator: ActorRef) extends Actor with FSM[GameState, Game
   onTransition{
     case _ -> Waiting =>    // Main transition
       nextStateData match {
-        case gc: GameConfiguration =>   // configuration is sent every time a game starts
-          createConfigAndSend(mediator, gc)
-          actorSys.scheduler.scheduleOnce(gc.timeConfig.gameToStartIn.minutes,self, MoveOn)
+        case gc: GameConfiguration => stateName match {
+          case Stopped => self ! PreStart
+          case Running => actorSys.scheduler.scheduleOnce(5 seconds, self, PreStart)
+        }
         case Uninitialized => throw new IllegalStateException("Game manager went to 'Waiting' without proper configuration object"+stateData)
       }
 
     case Waiting -> Running =>
       mediator ! GameStart
+
+    case Running -> Stopped =>
+      mediator ! ClientManager.DisconnectClients
 
   }
 }

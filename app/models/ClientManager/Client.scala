@@ -1,15 +1,11 @@
 package models.ClientManager
 
 import akka.actor._
-import play.api.libs.iteratee.{Concurrent, Iteratee}
 import play.api.libs.json._
 import play.api.libs.json.Json._
 import scala.concurrent.ExecutionContext.Implicits.global
 import models.{GameEnd, GameStart}
 import models.TicketGenerator.TicketGenerator.{RequestCount, RequestNewTicket}
-import models.Referee.Referee.Claim
-import models.ClientManager.Client.ErrorMessage
-import models.ClientManager.Client.TicketIssue
 import models.Referee.Referee.Claim
 import play.api.libs.json.JsString
 import play.api.libs.json.JsNumber
@@ -36,7 +32,7 @@ object Client {
   case class ErrorMessage(msg: String) extends Message
 
   trait Directive
-  case class UpdatePerks(n: Int) extends Directive
+  case class UpdatePerks(n: Int = 0) extends Directive
   case object GetUsername extends Directive
   case class TicketIssue(data: JsValue) extends Directive
   case object TicketIssueFailure extends Directive
@@ -45,25 +41,13 @@ object Client {
 }
 import Client._
 
-class Client
-(socket: ActorRef, mediator: ActorRef)
+class Client (socket: ActorRef, mediator: ActorRef)
   extends Actor with FSM[State, Data] {
 
   import akka.util.Timeout
   import scala.concurrent.duration._
 
   implicit val timeout = Timeout(3 seconds)
-  /*
-  val socketIn = Iteratee.foreach[JsValue] { event =>
-    (event \ "kind").as[String] match {
-      case "TicketRequeust" => self ! RequestNewTicket
-      case "Claim" => self ! Claim(event)
-      case _ => self ! ErrorMessage(" ## Programmer Error, bad data received ## ")
-    }
-  } map {_ => context.stop(self) }*/
-
-  //val (socketOut, socketOutChannel) = Concurrent.broadcast[JsValue]
-
 
   var username = ""
   var originalPerks = 300 // default
@@ -75,29 +59,28 @@ class Client
   startWith(Born, Uninitialized)
 
   when (Born) {
+      // any Json data at this stage will have to be part of the handshake
+      // consult the methodAPI.txt doc for more details
     case Event(data: JsObject, Uninitialized) => data \ "token" match {
-      case JsNumber(n) =>
-        println("DEBUG: client sent token : "+n)
+      case JsNumber(n) =>   // consult the DB for validation
         (mediator ? SessionManager.ConfirmRequest(n.toInt)).mapTo[Either[String, String]].foreach {
           case Right(user) =>
             username = user
             socket ! Json.obj("connectionStatus" -> true)     // last step of the handshake
           case Left(_) =>
-            socket ! Json.obj("connectionStatus" -> false)
+            socket ! Json.obj("connectionStatus" -> false)    // failed handshake
             self ! PoisonPill
         }
         goto (Waiting)
       case _ => stay
     }
-    /*case Event(GetSocket, Uninitialized) =>
-      goto (Waiting) replying (socketIn, socketOut)*/
   }
 
   when (Waiting) {
-    // InitMessage sent by client manager
+      // InitMessage sent by client manager
     case Event(InitMessage(msg, perks), _) =>
       self ! ServerMessage(msg)
-      val curPerks = stateData match {
+      val curPerks = stateData match {      // Settle on the current perks
         case Uninitialized =>
           originalPerks = perks.getOrElse(300)
           originalPerks
@@ -105,7 +88,7 @@ class Client
         case CurrentData(p, _) => p
       }
       self ! ServerMessage(userData(curPerks))
-      mediator ! RequestCount
+      mediator ! RequestCount     // number of tickets available
       stay using CurrentData(curPerks, (msg \\ "ticketPrice").head.as[Int])
 
     case Event(GameStart, CurrentData(_,_)) =>
@@ -117,8 +100,9 @@ class Client
       else self ! ErrorMessage("Not enough perks to buy a new ticket")
       stay
 
-    case Event(TicketIssue(ticket), CurrentData(perks, ticketPrice)) =>
-      self ! ServerMessage(ticket)
+    case Event(TicketIssue(ticketMsg), CurrentData(perks, ticketPrice)) =>
+      self ! ServerMessage(ticketMsg)
+      self ! UpdatePerks()    // Send user data to client
       stay using CurrentData(perks - ticketPrice, ticketPrice)
 
     case Event(TicketIssueFailure, _) =>
@@ -127,26 +111,23 @@ class Client
   }
 
   when (Playing) {
-    case Event(GameEnd, CurrentData(_,_)) =>
+    case Event(GameEnd, _: CurrentData) =>
       goto (Waiting)
 
     case Event(e: Claim, _) =>
-      mediator ! e
+      mediator ! e    // e contains the data part
       stay
-    case Event(UpdatePerks(count), CurrentData(p, tp)) =>
-      self ! ServerMessage(userData(p+count))
-      stay using CurrentData(p+count, tp)
   }
 
   onTransition{
     case Born -> Waiting =>
-      mediator ! ClientManager.Joined
+      mediator ! ClientManager.Joined     // attach self to the client manager
 
     case Waiting -> Playing =>
       self ! ServerMessage(Json.obj("kind" -> "GameStart"))
 
     case Playing -> Waiting =>
-      val p = stateData.asInstanceOf[CurrentData].perks
+      val p = nextStateData.asInstanceOf[CurrentData].perks
       self ! ServerMessage(Json.obj(
         "kind" -> "GameEnd",
         "data" -> JsNumber(p - originalPerks)
@@ -155,16 +136,22 @@ class Client
   }
 
   whenUnhandled{
+      // This one handles all incoming traffic from client,
+      // the actual operation is not done here as it depends on the state the client is in, hence
+      // it is resent to self with appropriate wrapping
     case Event(message: JsObject, _) =>
       message \ "kind" match {
         case JsString("TicketRequest") => self ! RequestNewTicket
         case JsString("Claim") => self ! Claim(message \ "data")
+
         case JsString("Test") =>    // For tests
           println("Debug: Client sent a Test message, replying")
           socket ! Json.obj(
           "kind" -> "Test",
           "data" -> JsString("We received ur message :> "+ message \ "data")
         )
+
+        case _ => self ! ErrorMessage("Unknown format of message, programming error")
       }; stay
 
     case Event(ErrorMessage(msg), _) =>
@@ -179,5 +166,14 @@ class Client
       stay
 
     case Event(GetUsername, _) => stay replying username
+
+      // update the perks of client here and send the info back
+    case Event(UpdatePerks(count), CurrentData(p, tp)) =>
+      self ! ServerMessage(userData(p+count))
+      stay using CurrentData(p+count, tp)
+  }
+
+  override def postStop() {
+    mediator ! SessionManager.RemoveUser(username)
   }
 }

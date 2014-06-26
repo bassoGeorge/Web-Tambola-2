@@ -19,12 +19,12 @@ require(['angular', './controllers', './directives', 'jquery'],
     // Declare app level module which depends on filters, and services
 
     angular.module('tambolaApp', [])
-    .controller('mainCtrl', controllers.mainCtrl)    // TODO: I think i need to add on the controllers here
+    .controller('mainCtrl', controllers.mainCtrl)
     .controller('testCtrl', controllers.testCtrl)
     .directive('claimButton', directives.claimButton)
     .directive('alertPop', ['$timeout', directives.alertPop])
     .directive('gameTimer', directives.gameTimer)
-    .directive('numberPop', ['$timeout', directives.numberPop])
+    .directive('numberPop', directives.numberPop)
     angular.bootstrap(document, ['tambolaApp']);
 
 });

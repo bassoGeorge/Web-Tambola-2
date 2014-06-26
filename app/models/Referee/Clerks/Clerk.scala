@@ -41,11 +41,12 @@ trait Clerk extends Actor with FSM[BiState, Data] {
 
   def checkClaim(t: Ticket): Boolean
 
+    // Convert JSON ticket to an array
   def ticketify(ticket: JsValue): Ticket = {
-    val basicData = (ticket \\ "number").toArray.map{_.as[Int]}
+    val basicData = (ticket \\ "number").map{_.as[Int]}.toArray
     val (row1, temp) = basicData splitAt 5
     val (row2, row3) = temp splitAt 5
-    Array(row1, row2, row3)
+    Array(row1, row2, row3)     // All seems in order
   }
 
   private[this] def makeMessage(s: String) (id: Int) = Json.obj (
@@ -65,7 +66,7 @@ trait Clerk extends Actor with FSM[BiState, Data] {
   startWith(Inactive, Uninitialized)
   when (Active) {
     case Event(Claim(clm), Prizes(perks, count)) =>
-      if (checkClaim(ticketify(clm \ "ticket"))) {
+      if (checkClaim(ticketify(clm \ "ticket"))) {      // clm has to be the 'data' part
         (sender ? Client.GetUsername).onComplete {
           case Success(user) => parent ! ClaimSuccess(user.asInstanceOf[String], claimType, perks)
           case Failure(_) => parent ! ClaimSuccess("Unknown", claimType, perks)

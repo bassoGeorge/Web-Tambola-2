@@ -1,9 +1,71 @@
-@(message: String)
+@()
 
-@main("Welcome to Play Framework") {
-
-    <div class="well">
-        <h1>@message</h1>
+@import partials._
+@core("Web-Tambola v.2.0") {
+<style>
+  body {
+  padding-top: 80px;
+  }
+</style>
+<script src='@routes.Application.connectJs()'></script>
+  <div ng-controller="mainCtrl">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a id="titleLink" class="navbar-brand" href="/">Web Tambola</a>
+        </div>
+        <!-- Form input -->
+        <form ng-show="gameState == 'Waiting' && !con.isConnected" class="navbar-form navbar-right" ng-class="con.error ? 'has-error' : '' ">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="username"
+              ng-model="username" required>
+          </div>
+          <button ng-click="establishConnection(username)" class="btn btn-default">Login</button>
+        </form>
+        <div ng-if="gameState == 'Waiting' && con.error" class="navbar-right">
+          <p class="navbar-text"><strong><em>That user already exists</em></strong></p>
+        </div>
+        <div ng-if="con.isConnected" class="navbar-right">
+          <p class="navbar-text">Logged in as <strong>{{ username }}</strong>
+            <small><a ng-click="con.close(); check()" href="#" class="navbar-link">Disconnect</a></small>
+          </p>
+        </div>
+        <p ng-if="gameState === null" class="navbar-right navbar-text">Waiting for server ...</p>
+        <p ng-if="gameState === 'Stopped'" class="navbar-right navbar-text"><strong>The Game is not running at the moment, please come back at a later time</strong></p>
+        <p ng-if="gameState === 'Running' && !con.isConnected" class="navbar-right navbar-text">The Game is already running, please try again later</p>
+      </div>
     </div>
 
+    <div ng-if="con.isConnected" class="container-fluid">
+      <div class="row">
+        <div class="col-xs-5 col-md-3"> <!-- Side bar -->
+          @details()
+          <div>
+            <number-pop number="number" delay="2000"></number-pop>
+          </div>
+          <div>
+            <game-timer timer="timer"></game-timer>
+          </div>
+        </div>
+
+        <div class="col-xs-9 col-md-6"> <!-- Main area -->
+          <div>
+            <div class="page-header">
+              <h1>Welcome <strong>{{ username }}</strong><small>You have <strong>{{ perks }}</strong> perks left</small></h1>
+            </div>
+            <div ng-if="gameState == 'Waiting' && perks >= ticket.price && ticket.count > 0" >
+              <button class="btn btn-primary btn-lg"
+                    ng-click="ticketReq()">Buy new Ticket ({{ticket.price}} perks)</button>{{ticket.count}} available
+            </div>
+          </div>
+          @playArea()
+        </div>
+
+        <div class="col-xs-4 col-md-3"> <!-- Leaderboard -->
+          @leaderboard()
+          @alerts()
+        </div>
+      </div>
+    </div>
+  </div>
 }

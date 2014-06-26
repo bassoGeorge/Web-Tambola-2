@@ -24,7 +24,7 @@
 }
 .stopwatch {
   padding-bottom: 10px;
-  width:65%;
+  width: 90%;
   margin:auto;
 }
 .stopwatch .message{
@@ -32,5 +32,5 @@
 }
 .numberPop {
   text-align: center;
-  font-size: 2000%;
+  font-size: 1000%;
 }

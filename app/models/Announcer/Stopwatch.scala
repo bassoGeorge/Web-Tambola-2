@@ -36,6 +36,9 @@ class Stopwatch extends Actor with FSM[State, Time] {
     case Event(pc: PickTimeConfig, _) => stay using Time(pc, 0 second)
     case Event(Start, Time(pc,_)) =>
       goto (Started) using Time(pc, getNewTime(pc))
+
+    case Event(MoveOn(_),_) =>    // previously scheduled
+      stay
   }
 
   when (Started) {
@@ -55,13 +58,13 @@ class Stopwatch extends Actor with FSM[State, Time] {
 
   onTransition{
     case _ -> Started =>
-      val t = stateData.time
+      val t = nextStateData.time
       val tLeft = t / 2
       if (stateName == Paused) parent ! PickNewNumberNow
       system.scheduler.scheduleOnce(tLeft, self, MoveOn(t - tLeft))
 
     case Started -> Paused =>
-      val t = stateData.time
+      val t = nextStateData.time
       parent ! NotifyTime(t)
       system.scheduler.scheduleOnce(t, self, MoveOn(getNewTime(stateData.pc)))
   }

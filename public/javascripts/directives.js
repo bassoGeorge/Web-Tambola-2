@@ -33,12 +33,16 @@ define([], function() {
       scope: {
         msg: '='
       },
-      template: '<div class="alert alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times</button>{{ msg }}</div>',
+      template: '<div class="alert alert-dismissable"><button type="button" class="close" aria-hidden="true">&times</button>{{ msg }}</div>',
       link: function(scope, elem, attr) {
         elem.addClass(attr.class)
+        elem.children("button").click(function(){
+          scope.$apply(function(){scope.msg = ""})
+        })
+
         var prev = null
         scope.$watch(function(){return scope.msg}, function(v){
-          if(v) {
+          if(v != "") {
             elem.show()
             $timeout.cancel(prev)
             prev = $timeout(function(){scope.msg = ""}, parseInt(attr.delay))
@@ -55,14 +59,15 @@ define([], function() {
       scope: {
         timer: '='
       },
-      template: '<div class="stopwatch"><div></div><div class="message">{{timer.message}}</div></div>',
+      template: '<div class="stopwatch"><div class="center-block"></div><div class="message">{{timer.message}}</div></div>',
       link: function(scope, elem, attr) {
         var clock = new FlipClock(elem.children("div")[0], {
           countdown: true,
           autoStart: false,
           clockFace: "MinuteCounter",
           callbacks: {
-            stop: function(){scope.$apply(function(){scope.timer = null})}
+            start: function(){scope.$apply(function(){scope.timer = null})},
+            stop: function(){elem.hide()}
           }
         })
 
@@ -71,24 +76,27 @@ define([], function() {
             elem.show()
             clock.setTime(value.time)
             clock.start()
-          } else elem.hide()
+          }
         })
       }
     }
   }
 
-  directives.numberPop = function($timeout) {
+  directives.numberPop = function() {
     return {
       restrict: 'AE',
       replace: true,
       scope: {number: '='},
-      template: '<div class="numberPop">{{ number }}</div>',
+      template: '<div class="numberPop bg-info">{{ number }}</div>',
       link: function(scope, elem, attr) {
+        var tmout = null
         scope.$watch(function(){return scope.number}, function(value){
           if(value != null) {
             elem.show()
-            $timeout(function(){scope.number = null}, parseInt(attr.delay))
-          } else elem.hide()
+            //$timeout(function(){scope.number = null}, parseInt(attr.delay))
+            clearTimeout(tmout)
+            tmout = setTimeout(function(){elem.hide()}, parseInt(attr.delay))
+          }
         })
       }
     }

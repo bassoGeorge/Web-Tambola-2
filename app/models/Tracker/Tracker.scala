@@ -7,6 +7,8 @@ import models.{GameEnd, GameStart}
 
 /**
  * Created by Anish'basso' on 6/4/14.
+ * Keeps track of the numbers picked during the course of the game
+ * is a single point of reference for deciding whether a given number was selected or not
  */
 object Tracker {
   trait Data

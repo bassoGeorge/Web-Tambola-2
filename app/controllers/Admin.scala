@@ -2,7 +2,9 @@ package controllers
 
 import play.api.mvc._
 import models.Game.AdminForm._
-import models.Game.Game.configureGame
+import models.Game.Game._
+import models.Game.Game.gameAccess
+import models._
 
 /**
  * Created by basso on 17/6/14.
@@ -10,7 +12,10 @@ import models.Game.Game.configureGame
 object Admin extends Controller {
   def admin() = Action {
     implicit request =>
-      Ok(views.html.admin(defaultAdmin))
+      if (gameAccess.gameState == Stopped)
+        Ok(views.html.admin(defaultAdmin))
+      else
+        BadRequest("Game already running") // TODO: implement watch screen here
   }
 
   // TODO: Check the game status and stuff
@@ -20,7 +25,7 @@ object Admin extends Controller {
         formWithErrors => BadRequest(views.html.admin(formWithErrors)),
         userData => {
           configureGame(userData)
-          Ok(views.html.testPage())
+          Ok(views.html.index())
         }
       )
   }

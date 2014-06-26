@@ -13,15 +13,16 @@ object Picker {
 import Picker._
 
 class Picker extends Actor {
-  def setup = collection.mutable.Queue(Random.shuffle(1 to 90).toSeq :_*)
-  var numberBag = setup
+  //def newQueue = collection.mutable.Queue(Random.shuffle(1 to 90).toSeq :_*)
+  def newQueue = collection.mutable.Queue(Random.shuffle(40 to 50).toSeq :_*)    // testing
+  var numberBag = newQueue
 
   def receive = {
     case PickNewNumberNow =>
       sender ! numberBag.dequeue()
       if (numberBag.isEmpty)
-        sender ! NoMoreNumbersLeft
+        context.parent ! NoMoreNumbersLeft
 
-    case Reset => numberBag = setup
+    case Reset => numberBag = newQueue
   }
 }

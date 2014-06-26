@@ -94,7 +94,7 @@ class Referee(val mediator: ActorRef, val tracker: ActorRef)
 
   whenUnhandled {
     case Event(c @ Claim(clm), _) =>
-      clerkMap((clm \ "claimType").as[ClaimType]) ! clm
+      clerkMap((clm \ "claimType").as[ClaimType]).tell(c, sender)   // c : {claimType:, ticketId:, ticket: }
       stay
   }
 

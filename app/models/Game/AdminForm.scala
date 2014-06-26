@@ -40,7 +40,7 @@ object AdminForm {
       )(TicketConfig.apply)(TicketConfig.unapply),
 
       "timeConfig" -> mapping(
-        "gameToStartIn" -> number(min = 3),
+        "gameToStartIn" -> number(min = 1),
         "numberOfGames" -> number(min = 1)
       )(TimeConfig.apply)(TimeConfig.unapply)
     )(GameConfiguration.apply)(GameConfiguration.unapply)
@@ -49,8 +49,8 @@ object AdminForm {
   val defaultAdmin = adminForm.fill( GameConfiguration(
     TotalNumbersConfig(1,1,1,1,1),
     PrizeMoneyConfig(200,100,100,300,400),
-    NumberPickTimingConfig(15, 5),
-    TicketConfig(100, 100, 300),
-    TimeConfig(3, 1)
+    NumberPickTimingConfig(6, 1),
+    TicketConfig(100, 100, 400),
+    TimeConfig(1, 1)
   ))
 }
