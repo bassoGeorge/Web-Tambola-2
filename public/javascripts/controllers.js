@@ -12,8 +12,9 @@ var createPack = function(newTicket) {
       Line1: true,
       Line2: true,
       Line3: true,
-      Corners: true,
       BullsEye: true,
+      Corners: true,
+      Star: true,
       FullHouse: true
     }
   }
@@ -36,6 +37,7 @@ function Claim(id, claimType, ticket) {
 var controllers = {};
 controllers.testCtrl = function($scope) {
 
+  getGameStatus(function(d,s,x){alert("Game status : "+JSON.stringify(d))})
   var sTicket = [[{number:10}, {number:30}, {number:20}, {}, {number:50}, {}, {}, {}, {number:90}],
             [{number:10}, {}, {number:20}, {}, {},{number:10}, {number:35}, {number:30}, {}],
             [{}, {number:35}, {}, {}, {number:32}, {number:60}, {}, {number:53}, {number:86}]]

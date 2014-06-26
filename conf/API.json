@@ -1,5 +1,6 @@
 // The full server-client API
 
+<claimType> : "Line1 | Line2 | Line3 | Corners | BullsEye | Star | FullHouse"
 /*------ Start Message ----------*/
 {
   kind: "GameStartInfo",
@@ -53,7 +54,7 @@
 {
   kind: "Claim",
   data: {
-    claimType: "Line1 | Line2 | Line3 | BullsEye | Corners | FullHouse",
+    claimType: <claimType>
     ticketId: 0,   // Number
     ticket: <Ticket>
   }
@@ -92,5 +93,5 @@
 // Prize Depletion
 {
   kind: "PrizeDepleted",
-  data: "Line1 | Line2 | Line3 | Corners | BullsEye | FullHouse"
+  data: <claimType>
 }

@@ -1,5 +1,6 @@
 .claimButtons button {
-  width:100%;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 .claimButtons .row {
   margin-left: 1px;

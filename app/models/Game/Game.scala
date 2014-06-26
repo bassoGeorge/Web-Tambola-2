@@ -14,15 +14,12 @@ import models.GameManager.GameManager.GameConfiguration
 
 object Game {
   private val mediator = system.actorOf(Props[Mediator], "Mediator")
-  private lazy val gameManager = system.actorOf(Props(classOf[GameManager], mediator), "GameManager")
+  private val gameManager = system.actorOf(Props(classOf[GameManager], mediator), "GameManager")
   def clientProps = Client.props(mediator)_
   def configureGame(gc: GameConfiguration) = gameManager ! gc
 
-  lazy val gameAccess: GameAccess = {
-    val gA = TypedActor(system).typedActorOf(TypedProps(classOf[ManagerProxy],
+  val gameAccess: GameAccess = TypedActor(system).typedActorOf(TypedProps(classOf[ManagerProxy],
       new ManagerProxy(mediator)), "ManagerProxy")
 
-    gameManager ! SubscribeTransitionCallBack(TypedActor(system).getActorRefFor(gA))
-    gA
-  }
+  gameManager ! SubscribeTransitionCallBack(TypedActor(system).getActorRefFor(gameAccess))
 }

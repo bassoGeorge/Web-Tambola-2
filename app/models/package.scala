@@ -38,6 +38,7 @@ package object models {
     Line3 -> "Line 3",
     Corners -> "Corners",
     BullsEye -> "Bull's eye",
+    Star -> "Star",
     FullHouse -> "Full house"
   )
 

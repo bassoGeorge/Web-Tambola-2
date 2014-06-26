@@ -53,3 +53,7 @@ function connect(username, fnConf, callBack) {
     )
   }
 }
+
+function getGameStatus(fn) {
+  $.getJSON("@routes.Application.checkStatus()", fn)
+}

@@ -11,21 +11,15 @@
   <div class="col-xs-6 col-md-4">
     <!--<div id="stopwatch"></div>-->
     <game-timer timer="timer"></game-timer>
-    <button class="btn btn-default" ng-click="timer = {time: 100, message: 'hellooo'}; number = 5">Set time</button>
+    <button class="btn btn-default btn-block" ng-click="timer = {time: 100, message: 'hellooo'}; number = 5">Set time</button>
     <number-pop number="number" delay="4000"></number-pop>
   </div>
   <div class="col-xs-3 col-md-2">
     @alerts()
-    <div class="row">
-      <div class="col-sm-4">
-        <button class='btn btn-warning' style='width:80%' ng-click="messages.error = 'Re-doing the error message'">alert</button>
-      </div>
-      <div class="col-sm-4">
-        <button class='btn btn-success' style='width:80%' ng-click="messages.success = 'Re-doing the success message'">alert</button>
-      </div>
-      <div class="col-sm-4">
-        <button class='btn btn-info' style='width:80%' ng-click="messages.info = 'Re-doing the info message'">alert</button>
-      </div>
+    <div class="btn-group" style="width:100%">
+      <button class='btn btn-warning ' ng-click="messages.error = 'Re-doing the error message'">alert</button>
+      <button class='btn btn-success ' ng-click="messages.success = 'Re-doing the success message'">alert</button>
+      <button class='btn btn-info ' ng-click="messages.info = 'Re-doing the info message'">alert</button>
     </div>
   </div>
 </div>

@@ -12,7 +12,7 @@ define([], function() {
     return {
       restrict: 'E',
       replace: true,
-      template: "<button class='btn'>test</button>",
+      template: "<button class='btn btn-block'>test</button>",
       link: function(scope, elem, attr) {
         elem.addClass(attr.class)
         elem.click(function(){
@@ -21,7 +21,7 @@ define([], function() {
         })
         elem.text(attr.text)
         scope.$watch('ticketPack.cButtons.'+attr.name, function(value){
-          value ? elem.show() : elem.hide();
+          value ? elem.removeAttr("disabled") : elem.attr("disabled", "disabled");
         })
       }
     }
