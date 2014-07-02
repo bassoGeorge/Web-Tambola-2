@@ -2,12 +2,13 @@ package models.TicketGenerator
 
 import akka.actor.{FSM, ActorRef, Actor}
 import models.{GameStart, GameEnd}
+import superActors.Mediator._
 import models.ClientManager.{ClientManager, Client}
 import play.api.libs.json.Json
-import models.Mediator.Mediator
 
 /**
  * Created by Anish'basso' on 3/4/14.
+ *  needs a mediator for bi-way comm
  */
 object TicketGenerator {
   sealed trait Data
@@ -25,7 +26,7 @@ import models.{BiState, Active, Inactive}
 
 class TicketGenerator(val mediator: ActorRef) extends Actor with FSM[BiState, Data] {
   startWith(Inactive, Uninitialized)
-  mediator ! Mediator.RegisterSelf(classOf[Directive])
+  mediator ! RegisterForReceive(self, classOf[Directive])
   import TicketLogic._
 
   /** Ticket Generator Active during the game standby time **/

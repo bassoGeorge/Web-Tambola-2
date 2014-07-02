@@ -1,7 +1,7 @@
 package models.Announcer
 
 import akka.actor.{Props, ActorRef, FSM, Actor}
-import models.Mediator.Mediator
+import superActors.Mediator._
 import models.{GameEnd, GameStart}
 import play.api.libs.json.Json
 import models.ClientManager.ClientManager
@@ -13,9 +13,10 @@ import models.Tracker.Tracker
 /**
  * Created by Anish'basso' on 5/4/14.
  * The announcer is responsible for the basic flow of the game
+ *  It needs mediator, bi-way comm
  */
 object Announcer {
-  trait Directive   // stub trait to register self with mediator
+  trait Directive
   case class PickTimeConfig(averageTime: Int, maxOffset: Int) extends Directive
 
   private def createMessage (m: String)(t: Int) = Json.obj(
@@ -32,7 +33,7 @@ import models.{BiState, Active, Inactive}
 class Announcer (mediator: ActorRef)
   extends Actor with FSM[BiState, Unit] {
 
-  mediator ! Mediator.RegisterSelf(classOf[Directive])
+  mediator ! RegisterForReceive(self, classOf[Directive])
   implicit val system = context
   implicit val timeout = akka.util.Timeout(2 second)
   import system._

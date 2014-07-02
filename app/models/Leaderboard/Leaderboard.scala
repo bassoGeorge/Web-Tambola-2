@@ -1,7 +1,7 @@
 package models.Leaderboard
 
 import akka.actor.{FSM, Actor, ActorRef}
-import models.Mediator.Mediator
+import superActors.Mediator._
 import models.{GameEnd, GameStart}
 import play.api.libs.json._
 import Json._
@@ -9,6 +9,7 @@ import models.ClientManager.ClientManager
 
 /**
  * Created by Anish'basso' on 4/4/14.
+ *  needs a mediator for bi-way comm
  */
 object Leaderboard {
   trait Data
@@ -29,7 +30,7 @@ import models.{BiState, Active, Inactive}
 class Leaderboard(val mediator: ActorRef)
   extends Actor with FSM[BiState, Data] {
 
-  mediator ! Mediator.RegisterSelf(classOf[Directive])
+  mediator ! RegisterForReceive(self, classOf[Directive])
   startWith(Inactive, Empty)
 
   when (Inactive) {

@@ -2,7 +2,7 @@ package models.Referee
 
 import akka.actor.{Props, FSM, Actor, ActorRef}
 import models.ClaimType.ClaimType
-import models.Mediator.Mediator
+import superActors.Mediator._
 import models.{ClaimType, GameStart}
 import models.Referee.Clerks.Reset
 import models.ClaimType.ClaimType
@@ -48,7 +48,7 @@ import akka.actor.OneForOneStrategy
 class Referee(val mediator: ActorRef, val tracker: ActorRef)
   extends Actor with FSM[BiState, Data]
 {
-  mediator ! Mediator.RegisterSelf(classOf[Referee.Directive])
+  mediator ! RegisterForReceive(self, classOf[Referee.Directive])
   implicit val system = context
   import system._
 

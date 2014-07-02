@@ -1,12 +1,12 @@
 package models.SessionManager
 
-import akka.actor.{ActorRef, Actor}
+import akka.actor.Actor
 import models.SessionManager.userDataAccess.UsersDAO
-import models.Mediator.Mediator.RegisterSelf
 import scala.concurrent.duration._
 
 /**
  * Created by basso on 10/6/14.
+ *  Doesn't need a mediator reference
  */
 // TODO: Incorporate Game State
 object SessionManager {
@@ -19,9 +19,8 @@ object SessionManager {
 }
 import SessionManager._
 
-class SessionManager(mediator: ActorRef) extends Actor {
+class SessionManager extends Actor {
   import scala.collection.mutable.{ Map => mMap }
-  mediator ! RegisterSelf(classOf[Directive])
 
   val buff = mMap[Int, String]()
   var counter = 0

@@ -5,7 +5,7 @@ package models.Game
  */
 import play.api.libs.concurrent.Akka.system
 import akka.actor.{TypedProps, TypedActor, Props}
-import models.Mediator.Mediator
+import superActors.Mediator._
 import models.GameManager.GameManager
 import akka.actor.FSM.SubscribeTransitionCallBack
 import play.api.Play.current

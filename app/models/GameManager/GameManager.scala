@@ -2,8 +2,8 @@ package models.GameManager
 import models._
 import models.Referee.Referee
 import akka.actor._
-import models.Mediator.Mediator
 import models.ClientManager.ClientManager
+import superActors.Mediator._
 import models.Announcer.Announcer
 import models.Leaderboard.Leaderboard
 import models.TicketGenerator.TicketGenerator
@@ -40,17 +40,31 @@ import scala.concurrent.duration._
  */
 class GameManager(val mediator: ActorRef) extends Actor with FSM[GameState, GameData] {
     // Setup against the mediator
-  mediator ! Mediator.RegisterSelf(classOf[Directive])
-  mediator ! Mediator.RegisterGlobal(classOf[GlobalMessage])
+  mediator ! RegisterForReceive(self, classOf[Directive])
+  mediator ! RegisterBroadcastMessage(classOf[GlobalMessage])
 
   implicit val system = context
   import system.{dispatcher, actorOf, system => actorSys}
 
   /*----------- Creating actors ----------*/
-  val independentColleges: List[Class[_]] = List(classOf[ClientManager], classOf[Announcer], classOf[Leaderboard], classOf[TicketGenerator], classOf[SessionManager])
-  independentColleges.foreach { x => actorOf(Props(x,mediator), x.getName)}
-  val tracker = actorOf(Props(classOf[Tracker], mediator), "Tracker")
+    /* ------ Receiving colleagues ------ */
+  mediator ! RegisterForReceive(
+    actorOf(Props[ClientManager], "ClientManager"),
+    classOf[ClientManager.Directive])
+
+  mediator ! RegisterForReceive(
+    actorOf(Props[SessionManager], "SessionManager"),
+    classOf[SessionManager.Directive])
+
+  val tracker = actorOf(Props[Tracker], "Tracker")      // Coz we need a reference to the tracker right now
+  mediator ! RegisterForReceive(tracker, classOf[Tracker.Directive])
+
+    /* -------- Other Colleagues ------- */
+  val otherColleagues: List[Class[_]] = List(classOf[Announcer], classOf[Leaderboard], classOf[TicketGenerator])
+  otherColleagues.foreach { x => actorOf(Props(x,mediator), x.getName)}
+
   val referee = actorOf(Props(classOf[Referee], mediator, tracker), "Referee")
+  /* -------------------------------------- */
 
   startWith(Stopped, Uninitialized)
   when (Stopped) {

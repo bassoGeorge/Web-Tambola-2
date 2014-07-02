@@ -22,6 +22,7 @@ import models.ClientManager.ClientManager.ManagerData
 /**
  * Created by Anish'basso' on 31/3/14.
  * Responsible for handling clients
+ * Its a Receiving collegue, i.e. it has no need of a mediator reference as it only receives and doesn't give back
  */
 
 /**
@@ -68,7 +69,7 @@ object ClientManager {
 import ClientManager._
 
 // Todo: I have removed the clientSet: Map[ActorRef, String] from the implementation, may need it later when implementing watch (most probably not)
-class ClientManager (val mediator: ActorRef )
+class ClientManager
   extends Actor with FSM[State, Data] {
 
   implicit val system = context
@@ -77,7 +78,7 @@ class ClientManager (val mediator: ActorRef )
 
   var initialPerks = 300  // Default
 
-  mediator ! Mediator.RegisterSelf(classOf[Directive])    // Register for messages at the mediator
+  //mediator ! Mediator.RegisterSelf(classOf[Directive])    // Register for messages at the mediator
   startWith(Standby, Uninitialized)
 
   when (Standby) {    // Game is in idle, waiting to start

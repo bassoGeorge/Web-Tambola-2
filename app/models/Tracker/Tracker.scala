@@ -1,14 +1,15 @@
 package models.Tracker
 
-import akka.actor.{ActorRef, FSM, Actor}
+import akka.actor.{FSM, Actor}
 import scala.collection.SortedSet
-import models.Mediator.Mediator
 import models.{GameEnd, GameStart}
 
 /**
  * Created by Anish'basso' on 6/4/14.
  * Keeps track of the numbers picked during the course of the game
  * is a single point of reference for deciding whether a given number was selected or not
+ *
+ *  its a receiving colleague
  */
 object Tracker {
   trait Data
@@ -22,8 +23,7 @@ object Tracker {
 import Tracker._
 import models.{BiState, Active, Inactive}
 
-class Tracker(val mediator: ActorRef) extends Actor with FSM[BiState, Data] {
-  mediator ! Mediator.RegisterSelf(classOf[Directive])
+class Tracker extends Actor with FSM[BiState, Data] {
 
   startWith(Inactive, Uninitialized)
 
