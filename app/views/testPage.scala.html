@@ -5,6 +5,7 @@
 <!-- <script src='@routes.Assets.at("javascripts/ticket.js")'></script> -->
 <script src='@routes.Application.connectJs()'></script>
 <div class="row" ng-controller="testCtrl">
+  @modals()
   <div class="col-xs-9 col-md-6">
     @playArea()
     <div>
@@ -16,6 +17,8 @@
     <game-timer timer="timer"></game-timer>
     <button class="btn btn-default btn-block" ng-click="timer = {time: 100, message: 'hellooo'}; number = 5">Set time</button>
     <number-pop number="number" delay="4000"></number-pop>
+    <button class="btn btn-primary btn-block" data-toggle="modal" data-target="#finishModal">Modal check</button>
+    <button class="btn btn-warning" ng-click="displayFinM()">Testing javascript modal</button>
   </div>
   <div class="col-xs-3 col-md-2">
     @alerts()
@@ -34,91 +37,8 @@
       stop: function(){alert("Stopwatch finished")}
     }
   })*/
+  function openModal() {
+    $("#finishModal").modal('show')
+  }
 </script>
-  <!--
-<div class="row">
-  <div class="col-xs-9 col-md-6">
-    <span>{{ name }} </span>
-    <table class="table table-bordered ticket">
-      <tr ng-repeat="trow in testTicket">
-        <td ng-repeat="col in trow">
-          <span ng-if="col.number">{{ col.number }}</span>
-        </td>
-      </tr>
-    </table>
-  </div>
-</div> -->
-  <!--
-<div class="row" ng-controller="mainCtrl">
-  <div class="col-md-4">
-    <span> My name is {{ myName }} </span>
-  </div>
-  <div class="col-md-8">
-    <div class="row" ng-repeat="ticketPack in SampleTicketPacks">
-      <div class="col-sm-8">
-        <table class="table table-bordered ticket">
-            <tr ng-repeat="r in ticketPack.ticket">
-              <td ng-repeat="i in r">
-                <div onclick='{{ $(this).parent().toggleClass("success") }}'
-               onmouseover='{{ $(this).parent().addClass("active") }}'
-               onmouseout='{{ $(this).parent().removeClass("active") }}' ng-if="i.number">{{ i.number }}
-                </div>
-              </td>
-            </tr>
-        </table>
-      </div>
-      <div class="col-sm-4 claimButtons">
-        <div class="row">
-          <div class="col-sm-4">
-            <claim-button class='btn-default' name="Line1" text="Line 1" />
-          </div>
-          <div class="col-sm-4">
-            <claim-button class='btn-default' name="Line2" text="Line 2" />
-          </div>
-          <div class="col-sm-4">
-            <claim-button class='btn-default' name="Line3" text="Line 3" />
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-sm-6">
-            <claim-button class='btn-warning' name="Corners" text="Corners" />
-          </div>
-          <div class="col-sm-6">
-            <claim-button class='btn-warning' name="BullsEye" text="Bulls Eye" />
-          </div>
-        </div>
-        <claim-button class='btn-primary' name="FullHouse" text="Full House" />
-      </div>
-    </div>
-  </div>
-</div>
-
-<!--
-<script>
-  var sampleTicket = [
-    [ {number: 10}, null, {number: 32}, null, null, {number: 60}, {number: 32}, {number: 60}, null, null ],
-    [ null, {number: 10}, {number: 32}, null, {number: 60}, null, {number: 32}, null, {number: 60}, null ],
-    [ {number: 10}, null, {number: 32}, null, {number: 60}, null, {number: 60}, {number: 32}, null, null ],
-  ]
-  function run() {
-    $("#ticketTest").addNewTicket(sampleTicket)
-  }
-  function testUser() {
-    connect($("#username").val(), {
-      onMessage: function(d) { alert("Received server message : "+JSON.stringify(d))},
-      onError: function() { alert("Some unknown error occured") },
-      onClose: function() { alert("Socket connection was closed") }
-    }, function(r) {
-      if(r.error) {
-        alert("Couldn't connect")
-      } else if (r.send) {
-        alert("Everything seems fine, we have a send()")
-        r.send({
-          kind: "Test",
-          data: "Hellooooo, this is the client speaking"
-        })
-      } else alert("We dont have a send() method")
-    })
-  }
-</script> -->
 }

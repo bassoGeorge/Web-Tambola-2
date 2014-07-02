@@ -80,8 +80,17 @@ controllers.testCtrl = function($scope) {
     count: 100
   }
   $scope.ticketReq = function(){alert(JSON.stringify({kind: "TicketRequest"}))} // 8
-  $scope.perks = 0    // 9
+  $scope.perks = {
+    orig: 100,
+    cur: 500
+  }    // 9
   $scope.gameState = 'Running'
+  $scope.makeMessage = function() {
+    if ($scope.perks.cur == $scope.perks.orig) return "Your perks have remained unchanged"
+    else if ($scope.perks.cur > $scope.perks.orig) return "You have earned "+($scope.perks.cur - $scope.perks.orig)+" perks this game"
+    else return "You have lost "+($scope.perks.orig - $scope.perks.cur)+" perks this game"
+  }
+  $scope.displayFinM = function() {$("#finishModal").modal('show')}
 }
 controllers.testCtrl.$inject = ['$scope']
 
@@ -107,7 +116,10 @@ controllers.mainCtrl = function($scope) {
   $scope.ticketReq = function(){
     if($scope.con.isConnected) $scope.con.send({kind: "TicketRequest"})
   }
-  $scope.perks = 0    // 9
+  $scope.perks = {
+    orig: 0,
+    cur: 0
+  }    // 9
   $scope.username = null
   /* ---------- Game setup ------------ */
   $scope.check = function () {
@@ -124,7 +136,7 @@ controllers.mainCtrl = function($scope) {
   var receive = function(msg) { $scope.$apply(function(){
     switch(msg.kind) {
       case "UserData":      // Working
-        $scope.perks = msg.data
+        $scope.perks.cur = msg.data
         break;
       case "TicketIssue":     // Working
         $scope.ticketPacks.push(createPack(msg.data))
@@ -139,15 +151,17 @@ controllers.mainCtrl = function($scope) {
         break;
       case "GameStart":     // Working
         // apart from other things
+        $scope.perks.orig = $scope.perks.cur
+        $scope.leaderboard = []     // Either here .. 1
         $scope.ticket = {}
         $scope.gameState = 'Running'
         $scope.messages.info = "Game On !!"
         break;
       case "GameEnd":
         $scope.ticketPacks = []
-        //$scope.gameDetails = {} // not needed
-        setTimeout(function(){$scope.leaderboard = []}, 4000)   // Don't know if its working
+        setTimeout(function(){$scope.leaderboard = []}, 4000)   // Or here .. 2
         $scope.gameState = 'Waiting'
+        $("#finishModal").modal('show')
         $scope.messages.info = "The game has finished, check your score"
         alert('Game finished message received')
         break;
@@ -195,6 +209,12 @@ controllers.mainCtrl = function($scope) {
       onError : onerror,
       onClose : onclose
     }, function(value){$scope.$apply(function(){$scope.con = value})})
+  }
+
+  $scope.makeMessage = function() {
+    if ($scope.perks.cur == $scope.perks.orig) return "Your perks have remained unchanged"
+    else if ($scope.perks.cur > $scope.perks.orig) return "You have earned "+($scope.perks.cur - $scope.perks.orig)+" perks this game"
+    else return "You have lost "+($scope.perks.orig - $scope.perks.cur)+" perks this game"
   }
 }
 controllers.mainCtrl.$inject = ['$scope'];

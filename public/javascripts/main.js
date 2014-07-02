@@ -13,7 +13,7 @@ requirejs.config({
   }
 });
 
-require(['angular', './controllers', './directives', 'jquery'],
+require(['angular', './controllers', './directives'],
   function(angular, controllers, directives) {
 
     // Declare app level module which depends on filters, and services

@@ -59,7 +59,7 @@ define([], function() {
       scope: {
         timer: '='
       },
-      template: '<div class="stopwatch"><div class="center-block"></div><div class="message">{{timer.message}}</div></div>',
+      template: '<div class="stopwatch"><div></div><div class="message">{{timer.message}}</div></div>',
       link: function(scope, elem, attr) {
         var clock = new FlipClock(elem.children("div")[0], {
           countdown: true,
