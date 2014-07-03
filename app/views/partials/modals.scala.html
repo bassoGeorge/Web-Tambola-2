@@ -1,16 +1,40 @@
 @()
 
-<div class="modal fade" role="dialog" id="finishModal" aria-labelledby="finishModalLable" aria-hidden="true">
+<div class="modal fade" role="dialog" id="finishModal" aria-labelledby="finishModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-        <h4 class="modal-title" id="finishModalLabel">This game has finished</h4>
+        <h3 class="modal-title" id="finishModalLabel">This game session has finished</h3>
       </div>
       <div class="modal-body">
-        <p>This game session has ended</p>
-        <p>{{ makeMessage() }}</p>
-        <p>You have {{ perks.cur }} remaining</p>
+        <div ng-switch="perks.cur == perks.orig">
+          <p ng-switch-when="true">Your perks have remained unchanged</p>
+          <div ng-switch-when="false">
+            <div ng-switch="perks.cur > perks.orig">
+              <p ng-switch-when="true">You have <span class="text-success">earned </span> <span class="label label-success">{{perks.cur - perks.orig}}</span> perks this game</p>
+              <p ng-switch-when="false">You have <span class="text-danger">lost </span> <span class="label label-danger">{{perks.cur - perks.orig}}</span> perks this game</p>
+            </div>
+          </div>
+        </div>
+        <h4 class="text-info">You have <span class="label label-default">{{ perks.cur }}</span> perks remaining</h4>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" role="dialog" id="disconnectModal" aria-labelledby="disconnectModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+        <h4 class="modal-title">Thankyou for playing Web-Tambola v2.0</h4>
+      </div>
+      <div class="modal-body">
+        <p>All games in this session are over, you will now be disconnected from the server</p>
+      </div>
+      <div class="modal-footer">
+        <p>This application is developed and maintained by <a href="http://www.anishgeorge.com">Anish George</a></p>
       </div>
     </div>
   </div>

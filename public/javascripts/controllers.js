@@ -4,8 +4,7 @@
 
 define(function() {
 
-
-/* ---------------- Auxiliary functions ------------- */
+ /* ---------------- Auxiliary functions ------------- */
 var createPack = function(newTicket) {
   var btnPack2 = function() {
     return {
@@ -85,11 +84,6 @@ controllers.testCtrl = function($scope) {
     cur: 500
   }    // 9
   $scope.gameState = 'Running'
-  $scope.makeMessage = function() {
-    if ($scope.perks.cur == $scope.perks.orig) return "Your perks have remained unchanged"
-    else if ($scope.perks.cur > $scope.perks.orig) return "You have earned "+($scope.perks.cur - $scope.perks.orig)+" perks this game"
-    else return "You have lost "+($scope.perks.orig - $scope.perks.cur)+" perks this game"
-  }
   $scope.displayFinM = function() {$("#finishModal").modal('show')}
 }
 controllers.testCtrl.$inject = ['$scope']
@@ -194,7 +188,10 @@ controllers.mainCtrl = function($scope) {
   })}
 
   var onclose = function() {$scope.$apply(function(){
-    alert("Thankyou for playing tambola")
+    setTimeout(function(){
+      $("#finishModal").modal('hide')
+      $("#disconnectModal").modal('show')
+    }, 1000)
     $scope.con = {isConnected: false}
     setTimeout(function(){$scope.check()}, 2000)
   })}
@@ -211,11 +208,6 @@ controllers.mainCtrl = function($scope) {
     }, function(value){$scope.$apply(function(){$scope.con = value})})
   }
 
-  $scope.makeMessage = function() {
-    if ($scope.perks.cur == $scope.perks.orig) return "Your perks have remained unchanged"
-    else if ($scope.perks.cur > $scope.perks.orig) return "You have earned "+($scope.perks.cur - $scope.perks.orig)+" perks this game"
-    else return "You have lost "+($scope.perks.orig - $scope.perks.cur)+" perks this game"
-  }
 }
 controllers.mainCtrl.$inject = ['$scope'];
 

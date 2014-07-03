@@ -54,9 +54,9 @@
             <div class="page-header">
               <h1>Welcome <strong>{{ username }}</strong><small>You have <strong>{{ perks.cur }}</strong> perks left</small></h1>
             </div>
-            <div ng-if="gameState == 'Waiting' && perks.cur >= ticket.price && ticket.count > 0" >
-              <button class="btn btn-primary btn-lg"
-                    ng-click="ticketReq()">Buy new Ticket ({{ticket.price}} perks)</button>{{ticket.count}} available
+            <div ng-if="gameState == 'Waiting' && perks.cur >= ticket.price && ticket.count > 0" style="padding-bottom:10px;">
+              <button class="btn btn-primary btn-block"
+                    ng-click="ticketReq()">Buy new Ticket for {{ticket.price}} perks<span class="badge pull-right">{{ticket.count}}</span></button>
             </div>
           </div>
           @playArea()
