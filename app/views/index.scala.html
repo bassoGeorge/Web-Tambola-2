@@ -42,19 +42,21 @@
         <div class="col-xs-5 col-md-3"> <!-- Side bar -->
           @details()
           <div>
-            <number-pop number="number" delay="2000"></number-pop>
-          </div>
-          <div>
-            <game-timer timer="timer"></game-timer>
+            <div>
+              <number-pop number="number" delay="2000"></number-pop>
+            </div>
+            <div>
+              <game-timer timer="timer"></game-timer>
+            </div>
           </div>
         </div>
 
         <div class="col-xs-9 col-md-6"> <!-- Main area -->
           <div>
             <div class="page-header">
-              <h1>Welcome <strong>{{ username }}</strong><small>You have <strong>{{ perks.cur }}</strong> perks left</small></h1>
+              <h1>Welcome <strong>{{ username }}</strong><small><span class="pull-right"><span class="label label-default">{{ perks.cur }}</span> perks left</span></small></h1>
             </div>
-            <div ng-if="gameState == 'Waiting' && perks.cur >= ticket.price && ticket.count > 0" style="padding-bottom:10px;">
+            <div ng-if="gameState == 'Waiting' && perks.cur >= ticket.price && ticket.count > 0" class="ticketRequestButton">
               <button class="btn btn-primary btn-block"
                     ng-click="ticketReq()">Buy new Ticket for {{ticket.price}} perks<span class="badge pull-right">{{ticket.count}}</span></button>
             </div>

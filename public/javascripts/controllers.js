@@ -157,7 +157,6 @@ controllers.mainCtrl = function($scope) {
         $scope.gameState = 'Waiting'
         $("#finishModal").modal('show')
         $scope.messages.info = "The game has finished, check your score"
-        alert('Game finished message received')
         break;
       case "ErrorMessage":    // working
         $scope.messages.error = msg.data

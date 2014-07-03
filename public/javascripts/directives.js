@@ -43,10 +43,10 @@ define([], function() {
         var prev = null
         scope.$watch(function(){return scope.msg}, function(v){
           if(v != "") {
-            elem.show()
+            elem.slideDown()
             $timeout.cancel(prev)
             prev = $timeout(function(){scope.msg = ""}, parseInt(attr.delay))
-          } else elem.hide()
+          } else elem.slideUp()
         })
       }
     }

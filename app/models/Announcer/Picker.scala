@@ -13,8 +13,8 @@ object Picker {
 import Picker._
 
 class Picker extends Actor {
-  def newQueue = collection.mutable.Queue(Random.shuffle(1 to 90).toSeq :_*)
-  //def newQueue = collection.mutable.Queue(Random.shuffle(40 to 50).toSeq :_*)    // testing
+  //def newQueue = collection.mutable.Queue(Random.shuffle(1 to 90).toSeq :_*)
+  def newQueue = collection.mutable.Queue(Random.shuffle(40 to 49).toSeq :_*)    // testing
   var numberBag = newQueue
 
   def receive = {
