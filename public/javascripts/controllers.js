@@ -177,7 +177,7 @@ controllers.mainCtrl = function($scope) {
       case "PrizeDepleted":
         for (var i = 0; i < $scope.ticketPacks.length; i++)
           $scope.ticketPacks[i].cButtons[msg.data] = false
-        $scope.messages.info = "The "+msg.data+" prize has been depleted"
+        $scope.messages.info = "All "+msg.data+" prizes have been claimed"
         break;
       case "Leaderboard":   // Working
         $scope.leaderboard = msg.data
