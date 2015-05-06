@@ -2,7 +2,7 @@ package models.TicketGenerator
 
 import akka.actor.{FSM, ActorRef, Actor}
 import models.{GameStart, GameEnd}
-import superActors.Mediator._
+import models.Mediator._
 import models.ClientManager.{ClientManager, Client}
 import play.api.libs.json.Json
 

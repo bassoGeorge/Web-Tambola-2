@@ -2,7 +2,7 @@ package models.Referee
 
 import akka.actor.{Props, FSM, Actor, ActorRef}
 import models.ClaimType.ClaimType
-import superActors.Mediator._
+import models.Mediator._
 import models.{ClaimType, GameStart}
 import models.Referee.Clerks.Reset
 import models.ClaimType.ClaimType

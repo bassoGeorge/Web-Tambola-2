@@ -3,7 +3,7 @@ import models._
 import models.Referee.Referee
 import akka.actor._
 import models.ClientManager.ClientManager
-import superActors.Mediator._
+import models.Mediator._
 import models.Announcer.Announcer
 import models.Leaderboard.Leaderboard
 import models.TicketGenerator.TicketGenerator

@@ -8,7 +8,6 @@ import akka.pattern.ask
 import scala.concurrent.duration._
 import play.api.libs.iteratee.{Enumerator, Input, Done}
 import org.joda.time.DateTime
-import models.Mediator.Mediator
 import models.{GameStart, GameEnd}
 import akka.util.Timeout
 import scala.Some

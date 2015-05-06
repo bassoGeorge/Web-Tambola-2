@@ -1,7 +1,7 @@
 package models.Leaderboard
 
 import akka.actor.{FSM, Actor, ActorRef}
-import superActors.Mediator._
+import models.Mediator._
 import models.{GameEnd, GameStart}
 import play.api.libs.json._
 import Json._

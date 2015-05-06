@@ -1,7 +1,7 @@
 package models.Announcer
 
 import akka.actor.{Props, ActorRef, FSM, Actor}
-import superActors.Mediator._
+import models.Mediator._
 import models.{GameEnd, GameStart}
 import play.api.libs.json.Json
 import models.ClientManager.ClientManager
